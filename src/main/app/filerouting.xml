@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="CE-3.2.1" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd 
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd ">
+    <file:connector name="inputFiles" autoDelete="true" pollingFrequency="1500" doc:name="File"/>
+    <file:connector name="outputFiles" doc:name="File"/>
+    <file:file-to-string-transformer name="file2String" doc:name="File to String"/>
+    <flow name="filerouting_Flow" doc:name="filerouting_Flow">
+        <file:inbound-endpoint path="${installDirectory}/inputFiles" moveToPattern="#[header:originalFilename].backup" moveToDirectory="${installDirectory}/inputFileBackup" connector-ref="inputFiles" transformer-refs="file2String" doc:name="inbound_Files"/>
+        <choice doc:name="Choice">
+            <when expression="//msg/header/destination='BuenosAires'" evaluator="xpath">
+                <processor-chain>
+                    <file:outbound-endpoint path="${installDirectory}/outputFileBuenosAires" outputPattern="#[function:datestamp]-#[header:originalFilename]" connector-ref="outputFiles" doc:name="outbound_BuenosAires"/>
+                </processor-chain>
+            </when>
+            <when expression="//msg/header/destination='London'" evaluator="xpath">
+                <processor-chain>
+                    <file:outbound-endpoint path="${installDirectory}/outputFileLondon" outputPattern="#[function:datestamp]-#[header:originalFilename]" connector-ref="outputFiles" doc:name="outbound_London"/>
+                </processor-chain>
+            </when>
+            <when expression="//msg/header/destination='SanFrancisco'" evaluator="xpath">
+                <processor-chain>
+                    <file:outbound-endpoint path="${installDirectory}/outputFileSanFrancisco" outputPattern="#[function:datestamp]-#[header:originalFilename]" connector-ref="outputFiles" doc:name="outbound_SanFrancisco"/>
+                </processor-chain>
+            </when>
+            <otherwise>
+                <processor-chain>
+                    <file:outbound-endpoint path="${installDirectory}/outputFileDefault" outputPattern="#[function:datestamp]-#[header:originalFilename]" connector-ref="outputFiles" doc:name="outbound_Default"/>
+                </processor-chain>
+            </otherwise>
+        </choice>
+    </flow>
+</mule>

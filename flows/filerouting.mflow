@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<mule-configuration xmlns="http://www.mulesoft.com/tooling/messageflow" name="filerouting">
+    <global-element type="org.mule.tooling.ui.modules.core.global.fileConnector" name="File" entity-id="c6464d0a-046c-409c-aa76-db2e6f74794b">
+        <properties>
+            <property value="inputFiles" name="name"/>
+            <property name="outputPattern"/>
+            <property name="writeToDirectory"/>
+            <property name="readFromDirectory"/>
+            <property name="workDirectory"/>
+            <property name="workFileNamePattern"/>
+            <property value="true" name="autoDelete"/>
+            <property name="outputAppend"/>
+            <property name="streaming"/>
+            <property name="recursive"/>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="dynamicNotification"/>
+            <property name="validateConnections"/>
+            <property name="serialiseObjects"/>
+            <property value="1500" name="pollingFrequency"/>
+            <property name="fileAge"/>
+            <property name="moveToPattern"/>
+            <property name="moveToDirectory"/>
+            <property name="comparator"/>
+            <property name="reverseOrder"/>
+        </properties>
+    </global-element>
+    <global-element type="org.mule.tooling.ui.modules.core.global.fileConnector" name="File" entity-id="a10ffd33-e9a1-4e31-8297-016ea9d8af6d">
+        <properties>
+            <property value="outputFiles" name="name"/>
+            <property name="outputPattern"/>
+            <property name="writeToDirectory"/>
+            <property name="readFromDirectory"/>
+            <property name="workDirectory"/>
+            <property name="workFileNamePattern"/>
+            <property name="autoDelete"/>
+            <property name="outputAppend"/>
+            <property name="streaming"/>
+            <property name="recursive"/>
+            <property name="dispatcherPoolFactory-ref"/>
+            <property name="dynamicNotification"/>
+            <property name="validateConnections"/>
+            <property name="serialiseObjects"/>
+            <property name="pollingFrequency"/>
+            <property name="fileAge"/>
+            <property name="moveToPattern"/>
+            <property name="moveToDirectory"/>
+            <property name="comparator"/>
+            <property name="reverseOrder"/>
+        </properties>
+    </global-element>
+    <global-element type="http://www.mulesoft.org/schema/mule/file/file-to-string-transformer" name="File to String" entity-id="a2f583d6-c0a5-481e-9f7f-754947a3f6b6">
+        <properties>
+            <property name="returnClass"/>
+            <property name="ignoreBadInput"/>
+            <property name="encoding"/>
+            <property name="mimeType"/>
+            <property value="file2String" name="name"/>
+        </properties>
+    </global-element>
+    <flow SubFlow="false" name="filerouting_Flow">
+        <properties>
+            <property name="processingStrategy2"/>
+            <property name="processingStrategy"/>
+        </properties>
+        <lane entity-id="67664d2a-095b-4f2b-abea-71fe263f0d96">
+            <endpoint message-exchange-pattern="OneWay" direction="Inbound" type="http://www.mulesoft.org/schema/mule/file/endpoint" name="inbound_Files" entity-id="e4c05e93-d8da-41ae-ac5d-89c387d9d7e6">
+                <properties>
+                    <property value="one-way" name="exchange-pattern"/>
+                    <property value="${installDirectory}/inputFiles" name="path"/>
+                    <property name="outputPattern"/>
+                    <property value="#[header:originalFilename].backup" name="moveToPattern"/>
+                    <property value="${installDirectory}/inputFileBackup" name="moveToDirectory"/>
+                    <property name="pollingFrequency"/>
+                    <property name="fileAge"/>
+                    <property name="address"/>
+                    <property name="responseTimeout"/>
+                    <property name="encoding"/>
+                    <property name="disableTransportTransformer"/>
+                    <property name="mimeType"/>
+                    <property name="comparator"/>
+                    <property name="reverseOrder"/>
+                    <property name="ref"/>
+                    <property value="inputFiles" name="connector-ref"/>
+                    <property value="file2String" name="transformer-refs"/>
+                    <property name="responseTransformer-refs"/>
+                </properties>
+            </endpoint>
+            <splitter type="org.mule.tooling.ui.modules.core.pattern.cbr" name="Choice" entity-id="dbb35cfe-7c78-401e-8f09-cf9ac69111b7">
+                <properties>
+                    <property-collection name="ea868b37-9253-4f06-a5bf-1fa3bf48104a">
+                        <property value="true" name="choice.otherwise"/>
+                    </property-collection>
+                    <property-collection name="24c9ce15-d8c1-48a9-a668-3a3fb26be44c">
+                        <property value="//msg/header/destination='SanFrancisco'" name="choice.expression"/>
+                        <property value="xpath" name="choice.evaluator"/>
+                    </property-collection>
+                    <property-collection name="75877509-0712-4e24-bf83-9357c3660a69">
+                        <property value="//msg/header/destination='London'" name="choice.expression"/>
+                        <property value="xpath" name="choice.evaluator"/>
+                    </property-collection>
+                    <property-collection name="66bbce50-40a1-4402-b7bf-f79d523ddc17">
+                        <property value="//msg/header/destination='BuenosAires'" name="choice.expression"/>
+                        <property value="xpath" name="choice.evaluator"/>
+                    </property-collection>
+                </properties>
+                <pattern type="org.mule.tooling.ui.modules.core.pattern.cbr" name="Choice" entity-id="30e52ab3-c520-4c96-8020-11b1e86248b3">
+                    <properties>
+                        <property-collection name="ea868b37-9253-4f06-a5bf-1fa3bf48104a">
+                            <property value="true" name="choice.otherwise"/>
+                        </property-collection>
+                        <property-collection name="24c9ce15-d8c1-48a9-a668-3a3fb26be44c">
+                            <property value="//msg/header/destination='SanFrancisco'" name="choice.expression"/>
+                            <property value="xpath" name="choice.evaluator"/>
+                        </property-collection>
+                        <property-collection name="75877509-0712-4e24-bf83-9357c3660a69">
+                            <property value="//msg/header/destination='London'" name="choice.expression"/>
+                            <property value="xpath" name="choice.evaluator"/>
+                        </property-collection>
+                        <property-collection name="66bbce50-40a1-4402-b7bf-f79d523ddc17">
+                            <property value="//msg/header/destination='BuenosAires'" name="choice.expression"/>
+                            <property value="xpath" name="choice.evaluator"/>
+                        </property-collection>
+                    </properties>
+                </pattern>
+                <compartment entity-id="521efbf9-5529-4783-85f4-87a6a6ed2892">
+                    <lane entity-id="66bbce50-40a1-4402-b7bf-f79d523ddc17">
+                        <endpoint message-exchange-pattern="OneWay" direction="Outbound" type="http://www.mulesoft.org/schema/mule/file/endpoint" name="outbound_BuenosAires" entity-id="01036e21-674f-41ea-bd23-025e60f58ab4">
+                            <properties>
+<property value="" name="ref"/>
+<property value="" name="transformer-refs"/>
+<property value="" name="address"/>
+<property value="" name="encoding"/>
+<property value="${installDirectory}/outputFileBuenosAires" name="path"/>
+<property value="" name="responseTransformer-refs"/>
+<property value="false" name="disableTransportTransformer"/>
+<property value="#[function:datestamp]-#[header:originalFilename]" name="outputPattern"/>
+<property value="" name="mimeType"/>
+<property value="" name="responseTimeout"/>
+<property value="one-way" name="exchange-pattern"/>
+<property value="outputFiles" name="connector-ref"/>
+                            </properties>
+                            <description></description>
+                        </endpoint>
+                    </lane>
+                    <lane entity-id="75877509-0712-4e24-bf83-9357c3660a69">
+                        <endpoint message-exchange-pattern="OneWay" direction="Outbound" type="http://www.mulesoft.org/schema/mule/file/endpoint" name="outbound_London" entity-id="6dd13e02-f153-4925-a54e-dd12082de55b">
+                            <properties>
+<property value="" name="ref"/>
+<property value="" name="transformer-refs"/>
+<property value="" name="address"/>
+<property value="" name="encoding"/>
+<property value="${installDirectory}/outputFileLondon" name="path"/>
+<property value="" name="responseTransformer-refs"/>
+<property value="false" name="disableTransportTransformer"/>
+<property value="#[function:datestamp]-#[header:originalFilename]" name="outputPattern"/>
+<property value="" name="mimeType"/>
+<property value="" name="responseTimeout"/>
+<property value="one-way" name="exchange-pattern"/>
+<property value="outputFiles" name="connector-ref"/>
+                            </properties>
+                            <description></description>
+                        </endpoint>
+                    </lane>
+                    <lane entity-id="24c9ce15-d8c1-48a9-a668-3a3fb26be44c">
+                        <endpoint message-exchange-pattern="OneWay" direction="Outbound" type="http://www.mulesoft.org/schema/mule/file/endpoint" name="outbound_SanFrancisco" entity-id="1039ea0e-ac29-4ae1-9619-2f0bd7f3ba99">
+                            <properties>
+<property value="" name="ref"/>
+<property value="" name="transformer-refs"/>
+<property value="" name="address"/>
+<property value="" name="encoding"/>
+<property value="${installDirectory}/outputFileSanFrancisco" name="path"/>
+<property value="" name="responseTransformer-refs"/>
+<property value="false" name="disableTransportTransformer"/>
+<property value="#[function:datestamp]-#[header:originalFilename]" name="outputPattern"/>
+<property value="" name="mimeType"/>
+<property value="" name="responseTimeout"/>
+<property value="one-way" name="exchange-pattern"/>
+<property value="outputFiles" name="connector-ref"/>
+                            </properties>
+                            <description></description>
+                        </endpoint>
+                    </lane>
+                    <lane entity-id="ea868b37-9253-4f06-a5bf-1fa3bf48104a">
+                        <endpoint message-exchange-pattern="OneWay" direction="Outbound" type="http://www.mulesoft.org/schema/mule/file/endpoint" name="outbound_Default" entity-id="c71d7305-1e35-428d-ad09-6b4f80baf384">
+                            <properties>
+<property value="" name="ref"/>
+<property value="" name="transformer-refs"/>
+<property value="" name="address"/>
+<property value="" name="encoding"/>
+<property value="${installDirectory}/outputFileDefault" name="path"/>
+<property value="" name="responseTransformer-refs"/>
+<property value="false" name="disableTransportTransformer"/>
+<property value="#[function:datestamp]-#[header:originalFilename]" name="outputPattern"/>
+<property value="" name="mimeType"/>
+<property value="" name="responseTimeout"/>
+<property value="one-way" name="exchange-pattern"/>
+<property value="outputFiles" name="connector-ref"/>
+                            </properties>
+                            <description></description>
+                        </endpoint>
+                    </lane>
+                </compartment>
+            </splitter>
+        </lane>
+    </flow>
+</mule-configuration>
