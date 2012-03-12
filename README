@@ -1,0 +1,25 @@
+## mule-example-studio-file-routing
+
+This is a simple Mule Studio application for demonstrating file routing capabilities of Mule ESB.
+
+Author: David Eason
+
+Please refer to Mulesoft.com for more details.
+
+To install and test this application please complete the following steps:
+
+- Clone/Import - After cloning from git, import to Mule Studio "File > Import > Mule > Mule Studio Project from External Location"
+
+- Set Install directory - Update the '/src/main/app/mule-app.properties' file with the location of the 'Testing directories' (see below) required for testing this application:
+
+- Required test directories include:
+  	- ${installDirectory}/inputFileBackup
+	- ${installDirectory}/inputFiles
+	- ${installDirectory}/outputFileBuenosAires
+	- ${installDirectory}/outputFileDefault
+	- ${installDirectory}/outputFileLondon
+	- ${installDirectory}/outputFileSanFrancisco/
+	
+- A complete .zip (fileRoutingDemo.zip) of my testing directories, complete with example input files and a script for running (reset.sh) the tests has been included in /src/test/resources.
+
+- The reset.sh script  (contained within fileRoutingDemo.zip) simply cleans & removes 'output files' from previous tests and copies the 'input backup' files into the 'input' directory to reset the test.
